@@ -3,7 +3,7 @@
 > Me: can we have crate?  
 > Mom: we have crate at home.
 
-Search your Rust dependency tree for crates.  Don't add new crates for features you already have.
+`depfirstsearch` lets you search your Rust project's entire transitive dependency tree for crates.  Don't add new crates for features you already have.
 
 Consider this scenario:
 
