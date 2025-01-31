@@ -1,6 +1,6 @@
 # Dep First Search
 
-> Me: can we have crate?
+> Me: can we have crate?  
 > Mom: we have crate at home.
 
 Search your Rust dependency tree for crates.  Don't add new crates for features you already have.
