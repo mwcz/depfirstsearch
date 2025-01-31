@@ -1,7 +1,7 @@
+use regex::Regex;
 use std::env;
 use std::process::Command;
-
-use regex::Regex;
+use termion::{color, style};
 
 fn main() {
     let search_term = env::args().nth(1).expect("Missing search term");
@@ -27,18 +27,23 @@ fn main() {
             .unwrap_or("")
             .trim()
             .replace("\n", "\n\t");
-        let keywords: Vec<String> = member["keywords"]
+        let keywords = member["keywords"]
             .as_array()
             .map(|kws| {
                 kws.iter()
                     .map(|kw| format!("#{}", kw.as_str().unwrap_or_default()))
-                    .collect()
+                    .collect::<Vec<_>>()
             })
-            .unwrap_or_default();
+            .unwrap_or_default()
+            .join(" ");
 
         all_info.push(format!(
-            "{name}@{version}\n\t{description}\n\t{keywords}",
-            keywords = keywords.join(" ")
+            "{bold}{name}{nobold}@{version}  {kw_col}{keywords}\n\t{desc_col}{description}{reset}",
+            bold = style::Bold,
+            nobold = style::NoBold,
+            kw_col = color::Fg(color::Cyan),
+            desc_col = color::Fg(color::Green),
+            reset = color::Reset.fg_str(),
         ));
     }
 
