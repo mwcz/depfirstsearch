@@ -2,6 +2,12 @@
 name = "depfirstsearch"
 version = "0.1.0"
 edition = "2024"
+authors = ["Michael Clayton <mclayton@redhat.com>"]
+description = "Keep your dependency tree small by searching for crates you may already have."
+repository = "https://github.com/mwcz/depfirstsearch/tree/main"
+license = "MIT"
+keywords = ["dependency", "dependencies", "udeps"]
+categories = ["command-line-utilities", "development-tools"]
 
 [dependencies]
 regex = "1.11.1"
