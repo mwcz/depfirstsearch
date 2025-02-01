@@ -38,12 +38,12 @@ fn main() {
             .join(" ");
 
         all_info.push(format!(
-            "{bold}{name}{nobold}@{version}  {kw_col}{keywords}\n\t{desc_col}{description}{reset}",
+            "{bold}{name}{reset_style}@{version}  {kw_col}{keywords}\n\t{desc_col}{description}{reset_col}",
             bold = style::Bold,
-            nobold = style::NoBold,
             kw_col = color::Fg(color::Cyan),
             desc_col = color::Fg(color::Green),
-            reset = color::Reset.fg_str(),
+            reset_col = color::Reset.fg_str(),
+            reset_style = style::Reset,
         ));
     }
 
