@@ -1,6 +1,6 @@
 [package]
 name = "depfirstsearch"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2024"
 authors = ["Michael Clayton <mclayton@redhat.com>"]
 description = "Keep your dependency tree small by searching for crates you may already have."
