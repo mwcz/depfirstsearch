@@ -10,6 +10,7 @@ keywords = ["dependency", "dependencies", "udeps"]
 categories = ["command-line-utilities", "development-tools"]
 
 [dependencies]
+argh = "0.1.13"
 regex = "1.11.1"
 serde_json = "1.0.138"
 termion = { version = "4.0.3", default-features = false }

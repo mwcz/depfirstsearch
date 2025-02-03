@@ -1,16 +1,21 @@
+use argh::FromArgs;
 use regex::Regex;
-
 use std::process::{Command, Output};
 use std::{env, io};
 use termion::{color, style};
 
+#[derive(Debug, FromArgs)]
+/// Keep your dependency tree small by searching for crates you may already have.
+struct Args {
+    /// the term to search for (supports regex)
+    #[argh(positional)]
+    term: String,
+}
+
 const USAGE: &str = "USAGE: depfirstsearch REGEX";
 
 fn main() {
-    let Some(search_term) = env::args().nth(1) else {
-        eprintln!("Missing REGEX\n{USAGE}");
-        std::process::exit(1);
-    };
+    let args: Args = argh::from_env();
 
     let Ok(output): io::Result<Output> = Command::new("cargo").args(["metadata"]).output() else {
         eprintln!("Failed to execute `cargo metadata`; are you in a cargo workspace?");
@@ -33,7 +38,7 @@ fn main() {
         .as_array()
         .expect("Failed to extract workspace members");
 
-    let keyword_re = Regex::new(&search_term).unwrap();
+    let keyword_re = Regex::new(&args.term).unwrap();
 
     let size_estimate = workspace_members.len() / 10;
 
@@ -81,7 +86,7 @@ fn main() {
 
     // Search for the user's term in the collected output.
     if all_crates.is_empty() {
-        println!("No crates found matching {search_term}");
+        println!("No crates found matching {}", args.term);
     } else {
         println!("{}", all_crates.join("\n"));
     }
