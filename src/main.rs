@@ -1,5 +1,5 @@
 use regex::Regex;
-use std::env::{self, current_exe};
+use std::env;
 use std::process::Command;
 use termion::{color, style};
 
@@ -10,6 +10,8 @@ fn main() {
         eprintln!("Missing REGEX\n{USAGE}");
         std::process::exit(1);
     };
+
+    let is_stdout_tty = termion::is_tty(&std::fs::File::create("/dev/stdout").unwrap());
 
     let output = Command::new("cargo")
         .args(["metadata"])
@@ -42,14 +44,20 @@ fn main() {
             .unwrap_or_default()
             .join(" ");
 
-        all_crates.push(format!(
-            "{bold}{name}{reset_style}@{version}  {kw_col}{keywords}\n\t{desc_col}{description}{reset_col}",
-            bold = style::Bold,
-            kw_col = color::Fg(color::Cyan),
-            desc_col = color::Fg(color::Green),
-            reset_col = color::Reset.fg_str(),
-            reset_style = style::Reset,
-        ));
+        let crate_msg = if is_stdout_tty {
+            format!(
+                "{bold}{name}{reset_style}@{version}  {kw_col}{keywords}\n\t{desc_col}{description}{reset_col}",
+                bold = style::Bold,
+                kw_col = color::Fg(color::Cyan),
+                desc_col = color::Fg(color::Green),
+                reset_col = color::Reset.fg_str(),
+                reset_style = style::Reset,
+            )
+        } else {
+            format!("{name}@{version}  {keywords}\n\t{description}")
+        };
+
+        all_crates.push(crate_msg);
     }
 
     let keyword_re = Regex::new(&search_term).unwrap();
