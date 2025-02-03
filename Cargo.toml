@@ -13,3 +13,8 @@ categories = ["command-line-utilities", "development-tools"]
 regex = "1.11.1"
 serde_json = "1.0.138"
 termion = { version = "4.0.3", default-features = false }
+
+[profile.release]
+# debug = true
+codegen-units = 1
+lto = "fat"
