@@ -1,9 +1,9 @@
 # Dep First Search
 
-> Me: can we have crate?  
-> Mom: we have crate at home.
+> Me: mom, can we have $CRATE?  
+> Mom: we have $CRATE at home.
 
-`depfirstsearch` lets you search your Rust project's entire transitive dependency tree for crates.  Don't add new crates for features you already have.
+`depfirstsearch` lets you search your Rust project's _current_ dependency tree for crates.  Don't `cargo add` new crates for features you already have.
 
 Consider this scenario:
 
