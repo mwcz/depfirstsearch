@@ -62,24 +62,24 @@ fn main() {
             .unwrap_or_default()
             .join(" ");
 
-        let crate_msg = if is_stdout_tty {
-            format!(
-                "{bold}{name}{reset_style}@{version}  {kw_col}{keywords}\n\t{desc_col}{description}{reset_col}",
-                bold = style::Bold,
-                kw_col = color::Fg(color::Cyan),
-                desc_col = color::Fg(color::Green),
-                reset_col = color::Reset.fg_str(),
-                reset_style = style::Reset,
-            )
-        } else {
-            format!("{name}@{version}  {keywords}\n\t{description}")
-        };
-
         if keyword_re.is_match(name)
             || keyword_re.is_match(version)
             || keyword_re.is_match(&keywords)
             || keyword_re.is_match(&description)
         {
+            let crate_msg = if is_stdout_tty {
+                format!(
+                    "{bold}{name}{reset_style}@{version}  {kw_col}{keywords}\n\t{desc_col}{description}{reset_col}",
+                    bold = style::Bold,
+                    kw_col = color::Fg(color::Cyan),
+                    desc_col = color::Fg(color::Green),
+                    reset_col = color::Reset.fg_str(),
+                    reset_style = style::Reset,
+                )
+            } else {
+                format!("{name}@{version}  {keywords}\n\t{description}")
+            };
+
             all_crates.push(crate_msg);
         }
     }
