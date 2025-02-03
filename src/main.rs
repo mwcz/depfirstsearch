@@ -1,10 +1,15 @@
 use regex::Regex;
-use std::env;
+use std::env::{self, current_exe};
 use std::process::Command;
 use termion::{color, style};
 
+const USAGE: &str = "USAGE: depfirstsearch REGEX";
+
 fn main() {
-    let search_term = env::args().nth(1).expect("Missing search term");
+    let Some(search_term) = env::args().nth(1) else {
+        eprintln!("Missing REGEX\n{USAGE}");
+        std::process::exit(1);
+    };
 
     let output = Command::new("cargo")
         .args(["metadata"])
@@ -18,7 +23,7 @@ fn main() {
         .as_array()
         .expect("Failed to extract workspace members");
 
-    let mut all_info = Vec::new();
+    let mut all_crates = Vec::new();
     for member in workspace_members {
         let name = member["name"].as_str().unwrap_or("");
         let version = member["version"].as_str().unwrap_or("");
@@ -37,7 +42,7 @@ fn main() {
             .unwrap_or_default()
             .join(" ");
 
-        all_info.push(format!(
+        all_crates.push(format!(
             "{bold}{name}{reset_style}@{version}  {kw_col}{keywords}\n\t{desc_col}{description}{reset_col}",
             bold = style::Bold,
             kw_col = color::Fg(color::Cyan),
@@ -49,13 +54,16 @@ fn main() {
 
     let keyword_re = Regex::new(&search_term).unwrap();
 
-    // Search for the user's term in the collected output.
-    let out = all_info
+    let matching_crates = all_crates
         .iter()
-        .filter(|&package| keyword_re.is_match(package))
-        .map(|package| package.trim())
-        .collect::<Vec<&str>>()
-        .join("\n");
+        .filter(|&cr| keyword_re.is_match(cr))
+        .map(|cr| cr.trim())
+        .collect::<Vec<&str>>();
 
-    println!("{}", out);
+    // Search for the user's term in the collected output.
+    if matching_crates.is_empty() {
+        println!("No crates found matching {search_term}");
+    } else {
+        println!("{}", matching_crates.join("\n"));
+    }
 }
