@@ -1,7 +1,7 @@
 use argh::FromArgs;
 use regex::Regex;
+use std::io;
 use std::process::{Command, Output};
-use std::{env, io};
 use termion::{color, style};
 
 #[derive(Debug, FromArgs)]
@@ -11,8 +11,6 @@ struct Args {
     #[argh(positional)]
     term: String,
 }
-
-const USAGE: &str = "USAGE: depfirstsearch REGEX";
 
 fn main() {
     let args: Args = argh::from_env();
